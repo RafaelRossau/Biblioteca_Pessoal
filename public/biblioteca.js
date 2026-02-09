@@ -1,3 +1,7 @@
+url = `http://localhost:3000/livros`
+const lista_livros = document.getElementById("livros_adicionados")
+const titulo2 
+
 function EnviarLivro(){
      const pegarMarcados = (idContainer) => {
         const container = document.getElementById(idContainer);
@@ -39,5 +43,15 @@ function EnviarLivro(){
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({titulo, autor, status_leitura, nota})
     })
+    fetch(url)
+    .then((response) => {
+      return response.json();
+    })
+
+    .then((livros) => {
+      
+})
+
+
     }
 }
