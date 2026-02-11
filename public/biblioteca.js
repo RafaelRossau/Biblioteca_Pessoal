@@ -1,8 +1,13 @@
 url = `http://localhost:3000/livros`
-const lista_livros = document.getElementById("livros_adicionados")
-const titulo2 
+
+
+
+
+let id = 1
 
 function EnviarLivro(){
+
+
      const pegarMarcados = (idContainer) => {
         const container = document.getElementById(idContainer);
         if (!container) return []; // Retorna lista vazia se não achar o ID
@@ -37,6 +42,7 @@ function EnviarLivro(){
     alert("Escreva uma nota de 0 a 10.")
     }
     else{
+        
         alert("Enviado com sucesso!")
         fetch("/livros", {
     method: "POST",
@@ -47,11 +53,32 @@ function EnviarLivro(){
     .then((response) => {
       return response.json();
     })
-
     .then((livros) => {
-      
+    const li = document.getElementById("li")
+
+    let titulo2 = livros[1].titulo
+    let autor2 = livros[1].autor
+    let status_leitura2 = livros[1].status_leitura
+    let nota2 = livros[1].nota
+
+    let titulo3 = document.createTextNode(titulo2.value);
+    let autor3 = document.createTextNode(autor2.value);
+    let status_leitura3 = document.createTextNode(status_leitura2.value);
+    let nota3 = document.createTextNode(nota2.value);
+
+    li.appendChild(titulo3)
+    li.appendChild(autor3)
+    li.appendChild(status_leitura3)
+    li.appendChild(nota3)
+
+     const pegarMarcados = (idContainer) => {
+        const container = document.getElementById(idContainer);
+        if (!container) return []; // Retorna lista vazia se não achar o ID
+        
+        const selecionados = container.querySelectorAll('p');
+        return Array.from(selecionados).map(input => input.value);
+     };
 })
-
-
     }
 }
+ 
