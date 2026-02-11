@@ -8,7 +8,8 @@
 </head>
 <body>
     <div id="div_pai">
-        <fieldset id="form">
+            <fieldset style="background-color: green;">
+                <h3>Criar no banco de dados</h3>
             <label for="titulo">Titulo:</label>
             <input type="text" id="titulo">
 
@@ -34,12 +35,50 @@
             <input type="number" id="nota">
 
             <button onclick="EnviarLivro()">Enviar</button>
+            </fieldset>
+            
+            <fieldset style="background-color: red;">
+                <h3>Adicionar na tela</h3>
 
-            <label for="mostrar_livro">Mostrar livro pelo ID:</label>
+            <label for="mostrar_livro">Mostrar livro pela localização no array:</label>
             <input type="number" id="mostrar_livro">
 
             <button onclick="mostrarLivro()">Enviar</button>
-        </fieldset>
+            </fieldset>
+            <fieldset style="background-color: yellow;">
+                <h3>Update</h3>
+            <label for="identificador">ID:</label>
+            <input type="number" id="identificador">
+            
+            <label for="titulo">Titulo:</label>
+            <input type="text" id="titulo2">
+
+            <label for="autor">Autor(a):</label>
+            <input type="text" id="autor2">
+
+            <details id="status_leitura2">
+               <summary>Status de leitura</summary> 
+                <input type="checkbox" id="lido" value="Lido">
+                <label for="lido">Lido</label>
+                
+                <input type="checkbox" id="nao_lido" value="Não lido">
+                <label for="nao_lido">Não lido</label>
+                
+                <input type="checkbox" id="lendo" value="Lendo">
+                <label for="lendo">Lendo</label>
+                
+                <input type="checkbox" id="querendo_ler" value="Querendo ler">
+                <label for="querendo_ler">Querendo ler</label>
+            </details>
+
+            <label for="nota">Nota:</label>
+            <input type="number" id="nota2">
+
+            <button onclick="atualizarLivro()">Enviar</button>
+            
+                
+            </fieldset>
+        
     </div>
     <div id="div_pai2">
         <fieldset id="livros_adicionados">

@@ -7,58 +7,45 @@ window.onload = function() {
     salvos.forEach(livro => {
         let li = document.createElement('li');
         li.innerHTML = `Titulo: ${livro.titulo} Autor: ${livro.autor} Status: ${livro.status_leitura} Nota: ${livro.nota}<br>`;
+        
+       
+        let btnDelete = document.createElement("button");
+        btnDelete.innerHTML = "X";
+        btnDelete.onclick = function() {
+            fetch(`${url}/${livro.id}`, { method: "DELETE" }).then(() => {
+                let salvosAtuais = JSON.parse(localStorage.getItem("meusLivros")) || [];
+                localStorage.setItem("meusLivros", JSON.stringify(salvosAtuais.filter(l => l.id !== livro.id)));
+                li.remove();
+            });
+        };
+        li.appendChild(btnDelete);
         lista.appendChild(li);
     });
 };
-let id = 1
 
-function EnviarLivro(){
-
-
-     const pegarMarcados = (idContainer) => {
+function EnviarLivro() {
+    
+    const pegarMarcados = (idContainer) => {
         const container = document.getElementById(idContainer);
-        if (!container) return []; // Retorna lista vazia se não achar o ID
-        
         const selecionados = container.querySelectorAll('input[type="checkbox"]:checked');
         return Array.from(selecionados).map(input => input.value);
-     };
-    const titulo = document.getElementById("titulo").value
-    const autor = document.getElementById("autor").value
-    const status_leitura = pegarMarcados("status_leitura")
-    const nota = document.getElementById("nota").value
+    };
+    const titulo = document.getElementById("titulo").value;
+    const autor = document.getElementById("autor").value;
+    const status_leitura = pegarMarcados("status_leitura");
+    const nota = document.getElementById("nota").value;
 
-    if(titulo === ""){
-        alert("O titulo não pode ficar vázio!")
+    if(titulo === "" || autor === "" || status_leitura.length !== 1 || nota === "" || nota < 0 || nota > 10) {
+        alert("Verifique os campos!");
+    } else {
+        fetch(url, { 
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({titulo, autor, status_leitura: status_leitura[0], nota})
+        }).then(() => alert("Enviado!"));
     }
-    else if(titulo.length > 100){
-        alert("Limite de titulo excedido.")
-    }
-    else if(autor === ""){
-        alert("O nome do autor não pode ficar vázio!")
-    }
-    else if(autor.length > 100){
-        alert("Limite do nome do autor excedido.")
-    }
-    else if(status_leitura.length > 1){
-        alert("Escolha apenas uma opção de status de leitura!")
-    }
-    else if(status_leitura.length == 0){
-        alert("Selecione um status de leitura!")
-    }
-    else if(nota < 0 || nota > 10 || nota === ""){
-    alert("Escreva uma nota de 0 a 10.")
-    }
-    else{
-        
-        alert("Enviado com sucesso!")
-        fetch("/livros", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({titulo, autor, status_leitura, nota})
-    })
+}
 
-}
-}
 function mostrarLivro(){
     const lista = document.getElementById("lista_livros")
     let idBusca = document.getElementById("mostrar_livro").value
@@ -69,41 +56,54 @@ function mostrarLivro(){
         const livro = livros[idBusca];
         if(!livro) return;
 
-        // Renderiza direto aqui dentro
         let li = document.createElement('li');
         li.innerHTML = `Titulo: ${livro.titulo} Autor: ${livro.autor} Status: ${livro.status_leitura} Nota: ${livro.nota}<br>`;
+        
+        
+        let btnDelete = document.createElement("button");
+        btnDelete.innerHTML = "X";
+        
+        btnDelete.onclick = function() {
+            fetch(`${url}/${livro.id}`, { method: "DELETE" })
+            .then(() => {
+                let salvos = JSON.parse(localStorage.getItem("meusLivros")) || [];
+                let novaLista = salvos.filter(l => l.id !== livro.id);
+                localStorage.setItem("meusLivros", JSON.stringify(novaLista));
+                li.remove();
+            });
+        };
+
+        li.appendChild(btnDelete);
         lista.appendChild(li);
 
-        // Salva no localStorage aqui dentro
         let salvos = JSON.parse(localStorage.getItem("meusLivros")) || [];
         salvos.push(livro);
         localStorage.setItem("meusLivros", JSON.stringify(salvos));
     })
     .catch(error => console.log("erro no carregamento"));
-let btn = document.createElement("button");
-btn.innerHTML = "Limpar Tudo";
-btn.onclick = function() {
-    localStorage.clear();
-    location.reload();
-};
-document.getElementById("div_pai").appendChild(btn);
-let btnDelete = document.createElement("button");
-    btnDelete.innerHTML = "X";
+}
+function atualizarLivro() {
     
-    btnDelete.onclick = function() {
-        
-        
-        fetch(`${url}/${livro.id}`, { method: "DELETE" })
-        .then(() => {
-            
-            let salvos = JSON.parse(localStorage.getItem("meusLivros")) || [];
-            
-            let novaLista = salvos.filter(l => l.id !== livro.id);
-            localStorage.setItem("meusLivros", JSON.stringify(novaLista));
-            
-            li.remove();
-        })
+    const pegarMarcados = (idContainer) => {
+        const container = document.getElementById(idContainer);
+        const selecionados = container.querySelectorAll('input[type="checkbox"]:checked');
+        return Array.from(selecionados).map(input => input.value);
+    };
+    let idParaEditar = document.getElementById("identificador").value
+    const titulo = document.getElementById("titulo2").value;
+    const autor = document.getElementById("autor2").value;
+    const status_leitura = pegarMarcados("status_leitura2");
+    const nota = document.getElementById("nota2").value;
+    fetch(`${url}/${idParaEditar}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ titulo, autor, status_leitura, nota })
+    })
+    .then(res => {
+        if (res.ok) {
+            alert("Informações atualizadas!");
+        }
+    })
+    .catch(err => console.log("Erro ao atualizar:", err));
 }
-li.appendChild(btnDelete);
-    lista.appendChild(li);
-}
+

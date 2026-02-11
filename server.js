@@ -38,7 +38,25 @@ app.get("/livros", (req, res) => {
     res.json(results); // Envia o resultado como JSON para o front
   });
 });
-
+//------------------------------------->DELETE<---------------------------------
+app.delete("/livros/:id", (req, res) => {
+  const { id } = req.params;
+  db.query("DELETE FROM livros WHERE id = ?", [id], (err, result) => {
+    if (err) return res.status(500).send(err);
+    res.json({ message: "Apagado!" });
+  });
+});
+//----------------------------->UPDATE<---------------------------------------
+app.put("/livros/:id", (req, res) => {
+  const { id } = req.params;
+  const { titulo, autor, status_leitura, nota } = req.body;
+  
+  const sql = "UPDATE livros SET titulo = ?, autor = ?, status_leitura = ?, nota = ? WHERE id = ?";
+  db.query(sql, [titulo, autor, status_leitura, nota, id], (err, result) => {
+    if (err) return res.status(500).json(err);
+    res.json({ message: "Atualizado com sucesso!" });
+  });
+});
 // Inicia o servidor na porta 3000
 app.listen(3000, () =>
   console.log("Servidor rodando em http://localhost:3000/biblioteca.html")
