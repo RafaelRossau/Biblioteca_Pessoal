@@ -1,8 +1,15 @@
 url = `http://localhost:3000/livros`
 
-
-
-
+window.onload = function() {
+    const salvos = JSON.parse(localStorage.getItem("meusLivros")) || [];
+    const lista = document.getElementById("lista_livros");
+    
+    salvos.forEach(livro => {
+        let li = document.createElement('li');
+        li.innerHTML = `Titulo: ${livro.titulo} Autor: ${livro.autor} Status: ${livro.status_leitura} Nota: ${livro.nota}<br>`;
+        lista.appendChild(li);
+    });
+};
 let id = 1
 
 function EnviarLivro(){
@@ -49,36 +56,30 @@ function EnviarLivro(){
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({titulo, autor, status_leitura, nota})
     })
-    fetch(url)
-    .then((response) => {
-      return response.json();
-    })
-    .then((livros) => {
-    const li = document.getElementById("li")
 
-    let titulo2 = livros[1].titulo
-    let autor2 = livros[1].autor
-    let status_leitura2 = livros[1].status_leitura
-    let nota2 = livros[1].nota
-
-    let titulo3 = document.createTextNode(titulo2.value);
-    let autor3 = document.createTextNode(autor2.value);
-    let status_leitura3 = document.createTextNode(status_leitura2.value);
-    let nota3 = document.createTextNode(nota2.value);
-
-    li.appendChild(titulo3)
-    li.appendChild(autor3)
-    li.appendChild(status_leitura3)
-    li.appendChild(nota3)
-
-     const pegarMarcados = (idContainer) => {
-        const container = document.getElementById(idContainer);
-        if (!container) return []; // Retorna lista vazia se não achar o ID
-        
-        const selecionados = container.querySelectorAll('p');
-        return Array.from(selecionados).map(input => input.value);
-     };
-})
-    }
 }
+}
+function mostrarLivro(){
+    const lista = document.getElementById("lista_livros")
+    let idBusca = document.getElementById("mostrar_livro").value
+
+    fetch(url)
+    .then(response => response.json())
+    .then(livros => {
+        const livro = livros[idBusca];
+        if(!livro) return;
+
+        // Renderiza direto aqui dentro
+        let li = document.createElement('li');
+        li.innerHTML = `Titulo: ${livro.titulo} Autor: ${livro.autor} Status: ${livro.status_leitura} Nota: ${livro.nota}<br>`;
+        lista.appendChild(li);
+
+        // Salva no localStorage aqui dentro
+        let salvos = JSON.parse(localStorage.getItem("meusLivros")) || [];
+        salvos.push(livro);
+        localStorage.setItem("meusLivros", JSON.stringify(salvos));
+    })
+    .catch(error => console.log("erro no carregamento"));
+}
+
  
