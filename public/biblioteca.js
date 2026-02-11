@@ -80,6 +80,30 @@ function mostrarLivro(){
         localStorage.setItem("meusLivros", JSON.stringify(salvos));
     })
     .catch(error => console.log("erro no carregamento"));
+let btn = document.createElement("button");
+btn.innerHTML = "Limpar Tudo";
+btn.onclick = function() {
+    localStorage.clear();
+    location.reload();
+};
+document.getElementById("div_pai").appendChild(btn);
+let btnDelete = document.createElement("button");
+    btnDelete.innerHTML = "X";
+    
+    btnDelete.onclick = function() {
+        
+        
+        fetch(`${url}/${livro.id}`, { method: "DELETE" })
+        .then(() => {
+            
+            let salvos = JSON.parse(localStorage.getItem("meusLivros")) || [];
+            
+            let novaLista = salvos.filter(l => l.id !== livro.id);
+            localStorage.setItem("meusLivros", JSON.stringify(novaLista));
+            
+            li.remove();
+        })
 }
-
- 
+li.appendChild(btnDelete);
+    lista.appendChild(li);
+}
